@@ -14,7 +14,6 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Listen for authentication state changes from Firebase
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const token = await user.getIdToken();
@@ -29,14 +28,12 @@ function App() {
       } else {
         dispatch(logOut());
       }
-      // Tell Redux that Firebase has finished checking
       dispatch(setAuthReady(true));
     });
 
     return () => unsubscribe();
   }, [dispatch]);
 
-  // Show a loading screen until Firebase figures out if the user is logged in or not
   if (!isAuthReady) {
     return (
       <div className="min-h-screen bg-[#f8f9fc]"></div>
