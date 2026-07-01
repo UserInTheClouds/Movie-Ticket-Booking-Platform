@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../../config/firebase';
@@ -8,7 +7,6 @@ import { setCredentials } from '../../store/authSlice';
 export default function Signuplogin() {
     const [isLogin, setIsLogin] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -50,7 +48,7 @@ export default function Signuplogin() {
         try {
             setIsLoading(true);
             let userCredential;
-            
+
             if (isLogin) {
                 userCredential = await signInWithEmailAndPassword(auth, email, password);
             } else {
@@ -70,7 +68,7 @@ export default function Signuplogin() {
                 },
                 token
             }));
-            
+
         } catch (err: any) {
             console.error("Firebase Auth Error:", err);
             switch (err.code) {
@@ -202,8 +200,8 @@ export default function Signuplogin() {
                                 {error}
                             </div>
                         )}
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             disabled={isLoading}
                             className="w-full py-[14px] bg-[#584cf4] text-white text-[16px] font-medium rounded-lg shadow-sm hover:bg-[#483de0] transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                         >
