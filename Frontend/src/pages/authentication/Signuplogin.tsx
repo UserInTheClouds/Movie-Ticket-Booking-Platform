@@ -122,11 +122,6 @@ export default function Signuplogin() {
                 <form onSubmit={handleSubmit} className="flex flex-col flex-grow relative overflow-hidden">
                     <div className={`flex flex-grow transition-transform duration-500 ease-in-out w-full ${isLogin ? 'translate-x-0' : '-translate-x-full'}`}>
                         <div className="w-full flex-shrink-0 flex flex-col justify-center gap-8 pr-4">
-                            <div className="bg-[#eff0fc] text-[#584cf4] text-[13px] px-4 py-3 rounded-md mb-2 flex flex-col border border-[#d5d7f7]">
-                                <span className="font-bold mb-1">Demo Credentials:</span>
-                                <span>Email: user@example.com</span>
-                                <span>Password: password123</span>
-                            </div>
                             <input
                                 type="email"
                                 placeholder="Email Address"
