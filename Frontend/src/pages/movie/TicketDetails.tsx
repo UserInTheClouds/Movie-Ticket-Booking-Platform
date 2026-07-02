@@ -1,8 +1,9 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import BottomNav from '../../components/BottomNav';
+import { motion } from 'framer-motion';
 
-export default function MovieBookSummary() {
+export default function TicketDetails() {
     const location = useLocation();
     const navigate = useNavigate();
     const { selectedSeats, showtime } = location.state || {};
@@ -17,7 +18,9 @@ export default function MovieBookSummary() {
     const formattedDate = new Date(showtime.startTime).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     const timeString = new Date(showtime.startTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 
-    const ticketPrice = selectedSeats.length * showtime.basePrice;
+    const ticketPrice = selectedSeats.reduce((sum: number, seat: any) => {
+        return sum + (seat.type === 'PRIME' ? showtime.basePrice + 60 : showtime.basePrice);
+    }, 0);
     const bookingFee = 20;
     const total = ticketPrice + bookingFee;
 
@@ -29,7 +32,7 @@ export default function MovieBookSummary() {
                     <ChevronLeft size={24} /> Back
                 </button>
                 <h1 className="text-[18px] font-bold text-[#1a1a24]">Booking Summary</h1>
-                <button className="text-sm text-gray-500 font-medium">Cancel</button>
+                <button onClick={() => navigate(-1)} className="text-sm text-gray-500 font-medium">Cancel</button>
             </div>
 
             {/* Content */}
@@ -46,7 +49,7 @@ export default function MovieBookSummary() {
 
                         <div className="flex space-x-4 mb-6">
                             <div>
-                                <p className="text-xs font-bold text-gray-400 mb-1">Screen {showtime.screenName}</p>
+                                <p className="text-xs font-bold text-gray-400 mb-1">{showtime.screenName}</p>
                                 <p className="text-sm font-bold text-[#1a1a24]">{timeString} &nbsp; {showtime.format}</p>
                             </div>
                             <div>
@@ -62,10 +65,18 @@ export default function MovieBookSummary() {
                         </div>
 
                         <div className="border-t border-gray-100 pt-4 space-y-3">
-                            <div className="flex justify-between items-center text-sm font-medium text-gray-600">
-                                <span>{selectedSeats.length}x Tickets</span>
-                                <span>₹{ticketPrice}</span>
-                            </div>
+                            {selectedSeats.filter((s: any) => s.type === 'PRIME').length > 0 && (
+                                <div className="flex justify-between items-center text-sm font-medium text-gray-600">
+                                    <span>{selectedSeats.filter((s: any) => s.type === 'PRIME').length}x Prime Tickets</span>
+                                    <span>₹{selectedSeats.filter((s: any) => s.type === 'PRIME').length * (showtime.basePrice + 60)}</span>
+                                </div>
+                            )}
+                            {selectedSeats.filter((s: any) => s.type !== 'PRIME').length > 0 && (
+                                <div className="flex justify-between items-center text-sm font-medium text-gray-600">
+                                    <span>{selectedSeats.filter((s: any) => s.type !== 'PRIME').length}x Regular Tickets</span>
+                                    <span>₹{selectedSeats.filter((s: any) => s.type !== 'PRIME').length * showtime.basePrice}</span>
+                                </div>
+                            )}
                             <div className="flex justify-between items-center text-sm font-medium text-gray-600">
                                 <span>Booking Fee</span>
                                 <span>₹{bookingFee}</span>
@@ -80,13 +91,14 @@ export default function MovieBookSummary() {
             </div>
 
             {/* Bottom Action */}
-            <div className="fixed bottom-[64px] left-0 right-0 p-4 bg-white border-t border-gray-100 z-40">
-                <button 
+            <div className="fixed bottom-[64px] left-0 right-0 w-full sm:max-w-[390px] mx-auto p-4 bg-white border-t border-gray-100 z-40">
+                <motion.button 
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => navigate('/booking/payment', { state: { selectedSeats, showtime, total, ticketPrice, bookingFee } })}
                     className="w-full bg-[#584cf4] text-white py-[14px] rounded-xl font-medium text-[16px] hover:bg-[#483de0] transition-colors shadow-lg shadow-[#584cf4]/30"
                 >
                     Proceed to Payment
-                </button>
+                </motion.button>
             </div>
 
             <BottomNav />

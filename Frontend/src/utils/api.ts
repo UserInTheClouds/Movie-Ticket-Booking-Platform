@@ -1,7 +1,14 @@
-import { store } from '../store/store';
+import { auth } from '../config/firebase';
 
 export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
-  const token = store.getState().auth.token;
+  let token = null;
+  if (auth.currentUser) {
+    try {
+      token = await auth.currentUser.getIdToken();
+    } catch (err) {
+      console.error("Error refreshing token:", err);
+    }
+  }
 
   const headers = new Headers(options.headers || {});
 

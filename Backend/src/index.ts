@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import movieRoutes from './routes/movie.route.js';
 import showtimeRoutes from './routes/showtime.route.js';
 import bookingRoutes from './routes/booking.route.js';
+import theatreRoutes from './routes/theatre.route.js';
 
 dotenv.config();
 
@@ -42,7 +43,10 @@ connectDB();
 app.use('/api/movies', movieRoutes);
 app.use('/api/showtimes', showtimeRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/theatres', theatreRoutes);
 
-app.listen(Number(PORT), "0.0.0.0", () => {
-    console.log("Server is running at port", PORT);
+app.listen(Number(PORT) || 5000, "0.0.0.0", () => {
+    console.log("Server is running at port", PORT || 5000);
 });
+
+export default app;

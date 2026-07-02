@@ -1,11 +1,36 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import BottomNav from '../../components/BottomNav';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
 export default function PaymentStatus() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { booking, showtime, selectedSeats } = location.state || {};
+    const { status, error, booking, showtime, selectedSeats } = location.state || {};
+
+    if (status === 'failed') {
+        return (
+            <div className="min-h-screen bg-[#f8f9fc] pb-32 font-sans flex flex-col items-center">
+                <div className="w-full bg-white p-4 shadow-sm flex justify-end">
+                    <button onClick={() => navigate(`/showtime/${showtime?._id}/seats`)} className="text-sm font-medium text-gray-500">Close</button>
+                </div>
+
+                <div className="mt-20 mb-6 flex flex-col items-center px-6 text-center">
+                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-6">
+                        <X size={32} className="text-red-500" />
+                    </div>
+                    <h1 className="font-bold text-[#1a1a24] text-xl mb-4">Payment Failed</h1>
+                    <p className="text-gray-600">{error || 'Payment failed. One or more seats was already booked by someone else. Please select seats again'}</p>
+                </div>
+
+                <button 
+                    onClick={() => navigate(`/showtime/${showtime?._id}/seats`)}
+                    className="mt-8 px-6 py-3 bg-[#584cf4] text-white rounded-full font-bold shadow-md hover:bg-[#463cc2] transition-colors"
+                >
+                    Back to Seat Selection
+                </button>
+            </div>
+        );
+    }
 
     if (!booking) return null;
 
@@ -34,7 +59,7 @@ export default function PaymentStatus() {
                     
                     <div className="grid grid-cols-2 gap-y-6 gap-x-4 mb-6 text-sm">
                         <div>
-                            <p className="text-xs text-gray-400 font-bold mb-1">The Grandview</p>
+                            <p className="text-xs text-gray-400 font-bold mb-1">{showtime.theatre.name}</p>
                             <p className="font-bold text-[#1a1a24]">{formattedDate}</p>
                         </div>
                         <div>

@@ -5,6 +5,9 @@ interface ISeat {
   col: number;
   status: 'AVAILABLE' | 'OCCUPIED' | 'LOCKED';
   lockedBy?: string;
+  type?: 'PRIME' | 'REGULAR';
+  label?: string;
+  version?: number;
 }
 
 export interface IShowtime extends Document {
@@ -20,8 +23,11 @@ export interface IShowtime extends Document {
 const seatSchema = new Schema<ISeat>({
   row: { type: String, required: true },
   col: { type: Number, required: true },
+  label: { type: String },
   status: { type: String, enum: ['AVAILABLE', 'OCCUPIED', 'LOCKED'], default: 'AVAILABLE' },
-  lockedBy: { type: String }
+  lockedBy: { type: String },
+  type: { type: String, enum: ['PRIME', 'REGULAR'], default: 'REGULAR' },
+  version: { type: Number, default: 0 }
 }, { _id: false });
 
 const showtimeSchema = new Schema<IShowtime>({

@@ -10,6 +10,7 @@ export interface IBooking extends Document {
   paymentMethod: string;
   transactionDate: Date;
   qrCodeData: string;
+  status: 'ACTIVE' | 'CANCELLED';
 }
 
 const bookingSchema = new Schema<IBooking>({
@@ -24,7 +25,8 @@ const bookingSchema = new Schema<IBooking>({
   totalAmount: { type: Number, required: true },
   paymentMethod: { type: String, required: true },
   transactionDate: { type: Date, default: Date.now },
-  qrCodeData: { type: String, required: true }
+  qrCodeData: { type: String, required: true },
+  status: { type: String, enum: ['ACTIVE', 'CANCELLED'], default: 'ACTIVE' }
 });
 
 export default (mongoose.models.Booking as mongoose.Model<IBooking>) || mongoose.model<IBooking>('Booking', bookingSchema);

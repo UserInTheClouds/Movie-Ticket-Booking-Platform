@@ -4,7 +4,7 @@ import { verifyAuth as protectRoute } from '../middleware/protectRoute.js';
 
 const router = express.Router();
 
-router.get('/', protectRoute, getAllMovies);
+router.get('/', getAllMovies);
 
 router.get('/:id', protectRoute, getMovieDetails);
 
