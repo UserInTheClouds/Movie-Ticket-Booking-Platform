@@ -19,8 +19,7 @@ A full-stack web application for reserving movie tickets.
 
 ## Assumptions Made
 1. **Seat Classes:** Rows J-M are premium `PRIME` seats (₹60 surcharge). Rows A-I are `REGULAR`.
-2. **Layout Topology:** Physical aisles in Figma were mapped to a 12-column grid by skipping specific matrix coordinates while keeping labels sequential.
-3. **Cancelled shows:** This case is currently not handled.
+2. **Cancelled shows:** This case is currently not handled.
 
 ## How to Run Locally
 
