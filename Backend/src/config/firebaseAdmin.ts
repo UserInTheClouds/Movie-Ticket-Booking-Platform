@@ -20,8 +20,13 @@ try {
       credential: cert(serviceAccount)
     });
     console.log('Firebase Admin Initialized successfully from local file.');
+  } else if (process.env.FIREBASE_PROJECT_ID) {
+    initializeApp({
+      projectId: process.env.FIREBASE_PROJECT_ID
+    });
+    console.log('Firebase Admin Initialized successfully using FIREBASE_PROJECT_ID.');
   } else {
-    console.warn('WARNING: FIREBASE_SERVICE_ACCOUNT env var not set and serviceAccountKey.json not found. Firebase Admin is NOT initialized.');
+    console.warn('WARNING: FIREBASE_PROJECT_ID env var not set and serviceAccountKey.json not found. Firebase Admin is NOT initialized.');
   }
 } catch (error) {
   console.error('Failed to initialize Firebase Admin:', error);
