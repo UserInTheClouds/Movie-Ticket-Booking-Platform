@@ -1,8 +1,10 @@
 import { auth } from '../config/firebase';
+import { store } from '../store/store';
 
 export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
-  let token = null;
-  if (auth.currentUser) {
+  let token = store.getState().auth.token;
+
+  if (!token && auth.currentUser) {
     try {
       token = await auth.currentUser.getIdToken();
     } catch (err) {

@@ -71,20 +71,26 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const token = await user.getIdToken();
-        dispatch(setCredentials({
-          user: {
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-          },
-          token
-        }));
-      } else {
+      try {
+        if (user) {
+          const token = await user.getIdToken();
+          dispatch(setCredentials({
+            user: {
+              uid: user.uid,
+              email: user.email,
+              displayName: user.displayName,
+            },
+            token
+          }));
+        } else {
+          dispatch(logOut());
+        }
+      } catch (error) {
+        console.error("Auth state change error:", error);
         dispatch(logOut());
+      } finally {
+        dispatch(setAuthReady(true));
       }
-      dispatch(setAuthReady(true));
     });
 
     return () => unsubscribe();
