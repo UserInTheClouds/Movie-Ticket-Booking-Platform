@@ -60,7 +60,7 @@ export const getShowtimesByMovie = async (req: Request, res: Response): Promise<
                 seats.push({
                   row,
                   col,
-                  status: Math.random() > 0.85 ? 'OCCUPIED' : 'AVAILABLE'
+                  status: 'AVAILABLE'
                 });
               }
             }
@@ -78,7 +78,19 @@ export const getShowtimesByMovie = async (req: Request, res: Response): Promise<
         }
       }
 
-      await Showtime.insertMany(newShowtimes);
+      const bulkOps = newShowtimes.map(st => ({
+        updateOne: {
+          filter: {
+            movie: st.movie,
+            theatre: st.theatre,
+            startTime: st.startTime,
+            screenName: st.screenName
+          },
+          update: { $setOnInsert: st },
+          upsert: true
+        }
+      }));
+      await Showtime.bulkWrite(bulkOps as any);
       
       showtimes = await Showtime.find({ movie: req.params.movieId as any })
         .populate('theatre')
