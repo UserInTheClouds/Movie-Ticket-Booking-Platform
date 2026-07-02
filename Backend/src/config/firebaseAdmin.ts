@@ -8,15 +8,20 @@ const dirname = path.dirname(filename);
 const serviceAccountPath = path.join(dirname, 'serviceAccountKey.json');
 
 try {
-  if (fs.existsSync(serviceAccountPath)) {
-    const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf-8'));
-
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
     initializeApp({
       credential: cert(serviceAccount)
     });
-    console.log('Firebase Admin Initialized successfully.');
+    console.log('Firebase Admin Initialized successfully from environment variable.');
+  } else if (fs.existsSync(serviceAccountPath)) {
+    const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf-8'));
+    initializeApp({
+      credential: cert(serviceAccount)
+    });
+    console.log('Firebase Admin Initialized successfully from local file.');
   } else {
-    console.warn('WARNING: serviceAccountKey.json not found in src/config. Firebase Admin is NOT initialized.');
+    console.warn('WARNING: FIREBASE_SERVICE_ACCOUNT env var not set and serviceAccountKey.json not found. Firebase Admin is NOT initialized.');
   }
 } catch (error) {
   console.error('Failed to initialize Firebase Admin:', error);
