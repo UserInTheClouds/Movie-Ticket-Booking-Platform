@@ -63,4 +63,4 @@ npm run dev
 ```
 
 ### 4. Access App
-Navigate to `http://localhost:5173`. Demo credentials are provided on the login screen.
+Navigate to `http://localhost:5173`. 
