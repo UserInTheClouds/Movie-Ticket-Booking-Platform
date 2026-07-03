@@ -19,7 +19,7 @@ A full-stack web application for reserving movie tickets.
 
 ## Assumptions Made
 1. **Seat Classes:** Rows J-M are premium `PRIME` seats (₹60 surcharge). Rows A-I are `REGULAR`.
-2. **Cancelled shows:** This case is currently not handled.
+2. **Shows cancelled by the theatres:** This case is currently not handled.
 
 ## How to Run Locally
 
