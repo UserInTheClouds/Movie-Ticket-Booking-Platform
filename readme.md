@@ -2,6 +2,8 @@
 
 A full-stack web application for reserving movie tickets.
 
+Link - https://movie-ticket-booking-platform.vercel.app
+
 ## Tech Stack
 - **Frontend:** React, Tailwind CSS
 - **Backend:** Node.js, Express
