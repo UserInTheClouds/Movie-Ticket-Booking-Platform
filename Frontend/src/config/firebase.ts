@@ -13,7 +13,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-// Explicitly set persistence
-setPersistence(auth, browserLocalPersistence).catch((error) => {
-  console.error("Firebase persistence error:", error);
-});
+// Persistence is handled automatically by Firebase Web SDK using indexedDB/localStorage by default.
