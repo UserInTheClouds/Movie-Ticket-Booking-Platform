@@ -99,7 +99,7 @@ export default function Signuplogin() {
                     </h1>
                 </div>
 
-                <div className="relative flex p-1 bg-[#e9ecef] rounded-lg mb-8 shrink-0">
+                <div className="relative flex p-1 bg-[#e9ecef] rounded-lg mb-6 shrink-0">
                     <div
                         className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white rounded-md shadow-sm transition-transform duration-300 ease-in-out ${isLogin ? 'translate-x-0' : 'translate-x-full'}`}
                     />
@@ -118,6 +118,14 @@ export default function Signuplogin() {
                         Sign Up
                     </button>
                 </div>
+
+                {isLogin && (
+                    <div className="bg-blue-50 border border-blue-100 text-blue-800 p-3 rounded-lg text-[14px] text-center mb-6 flex flex-col gap-1 shadow-sm">
+                        <span className="font-bold text-[12px] uppercase tracking-wider text-blue-600 mb-1">Demo Account</span>
+                        <span><strong>Email:</strong> demomail@gmail.com</span>
+                        <span><strong>Password:</strong> pass1234</span>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="flex flex-col flex-grow relative overflow-hidden">
                     <div className={`flex flex-grow transition-transform duration-500 ease-in-out w-full ${isLogin ? 'translate-x-0' : '-translate-x-full'}`}>
