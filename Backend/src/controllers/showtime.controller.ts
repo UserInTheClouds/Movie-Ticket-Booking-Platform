@@ -1,15 +1,14 @@
 import { type Request, type Response } from 'express';
 import Showtime from '../models/showtime.js';
-import Theatre from '../models/theatre.js';
-import Movie from '../models/movie.js';
 
 export const getShowtimesByMovie = async (req: Request, res: Response): Promise<any> => {
   try {
-    let showtimes = await Showtime.find({ movie: req.params.movieId as any })
-      .populate('theatre')
-      .sort({ startTime: 1 });
+    const futureShowtimesCount = await Showtime.countDocuments({ 
+      movie: req.params.movieId as any,
+      startTime: { $gte: new Date() }
+    });
 
-    if (showtimes.length === 0) {
+    if (futureShowtimesCount === 0) {
       let theatres = await Theatre.find();
       if (theatres.length === 0) {
         theatres = await Theatre.insertMany([
@@ -57,11 +56,7 @@ export const getShowtimesByMovie = async (req: Request, res: Response): Promise<
             const rowLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
             for (const row of rowLabels) {
               for (let col = 1; col <= 12; col++) {
-                seats.push({
-                  row,
-                  col,
-                  status: 'AVAILABLE'
-                });
+                seats.push({ row, col, status: 'AVAILABLE' });
               }
             }
 
@@ -78,24 +73,21 @@ export const getShowtimesByMovie = async (req: Request, res: Response): Promise<
         }
       }
 
-      const bulkOps = newShowtimes.map(st => ({
-        updateOne: {
-          filter: {
-            movie: st.movie,
-            theatre: st.theatre,
-            startTime: st.startTime,
-            screenName: st.screenName
-          },
-          update: { $setOnInsert: st },
-          upsert: true
-        }
-      }));
-      await Showtime.bulkWrite(bulkOps as any);
-      
-      showtimes = await Showtime.find({ movie: req.params.movieId as any })
-        .populate('theatre')
-        .sort({ startTime: 1 });
+      if (newShowtimes.length > 0) {
+        const bulkOps = newShowtimes.map(st => ({
+          updateOne: {
+            filter: { movie: st.movie, theatre: st.theatre, startTime: st.startTime, screenName: st.screenName },
+            update: { $setOnInsert: st },
+            upsert: true
+          }
+        }));
+        await Showtime.bulkWrite(bulkOps as any);
+      }
     }
+
+    const showtimes = await Showtime.find({ movie: req.params.movieId as any })
+      .populate('theatre')
+      .sort({ startTime: 1 });
 
     res.json(showtimes);
   } catch (err) {
@@ -107,9 +99,9 @@ export const getShowtimesByMovie = async (req: Request, res: Response): Promise<
 export const getShowtimeSeats = async (req: Request, res: Response) => {
   try {
     const showtime = await Showtime.findById(req.params.showtimeId)
-        .select('seats basePrice screenName startTime format theatre movie')
-        .populate('theatre')
-        .populate('movie');
+      .select('seats basePrice screenName startTime format theatre movie')
+      .populate('theatre')
+      .populate('movie');
     if (!showtime) return res.status(404).json({ error: 'Showtime not found' });
 
     res.json(showtime);
