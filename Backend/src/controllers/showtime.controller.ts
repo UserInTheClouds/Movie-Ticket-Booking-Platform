@@ -1,5 +1,7 @@
 import { type Request, type Response } from 'express';
 import Showtime from '../models/showtime.js';
+import Movie from '../models/movie.js';
+import Theatre from '../models/theatre.js';
 
 export const getShowtimesByMovie = async (req: Request, res: Response): Promise<any> => {
   try {
