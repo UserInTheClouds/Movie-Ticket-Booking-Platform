@@ -9,8 +9,8 @@ export default function Signuplogin() {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('demomail@gmail.com');
+    const [password, setPassword] = useState('pass1234');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');

@@ -1,6 +1,6 @@
 import './App.css';
 import Signuplogin from './pages/authentication/Signuplogin';
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { HashRouter as BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from './pages/home/Home';
 import MovieDetails from './pages/movie/MovieDetails';
 import SelectTheatre from './pages/movie/SelectTheatre';
