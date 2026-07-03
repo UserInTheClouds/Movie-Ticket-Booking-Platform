@@ -32,7 +32,12 @@ export default function Home() {
                     const moviesData = await moviesRes.json();
                     const theatresData = await theatresRes.json();
 
-                    if (Array.isArray(moviesData)) setMovies(moviesData);
+                    if (Array.isArray(moviesData)) {
+                        setMovies(moviesData);
+                        if (moviesData.length > 0) {
+                            setFeaturedIndex(Math.floor(Math.random() * moviesData.length));
+                        }
+                    }
                     if (Array.isArray(theatresData)) setTheatres(theatresData);
                 }
             } catch (err) {
