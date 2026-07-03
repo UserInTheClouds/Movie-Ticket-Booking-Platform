@@ -4,7 +4,6 @@ import { verifyAuth as protectRoute } from '../middleware/protectRoute.js';
 
 const router = express.Router();
 
-// GET /api/theatres
 router.get('/', protectRoute, getAllTheatres);
 router.get('/:id', protectRoute, getTheatreById);
 
