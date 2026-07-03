@@ -27,7 +27,7 @@ export default function MovieDetails() {
         if (isUIVisible) {
             timeout = setTimeout(() => {
                 setIsUIVisible(false);
-            }, 700);
+            }, 3000);
         }
         return () => clearTimeout(timeout);
     }, [isUIVisible]);
