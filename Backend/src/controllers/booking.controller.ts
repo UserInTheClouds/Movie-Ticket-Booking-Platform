@@ -4,7 +4,7 @@ import Showtime from '../models/showtime.js';
 
 export const createBooking = async (req: Request & { user?: any }, res: Response): Promise<any> => {
   try {
-    const { showtimeId, seats, ticketPrice, bookingFee, totalAmount, paymentMethod } = req.body;
+    const { showtimeId, seats, paymentMethod } = req.body;
     const userUid = req.user?.uid;
 
     if (!userUid) return res.status(401).json({ error: 'Unauthorized' });
@@ -16,6 +16,9 @@ export const createBooking = async (req: Request & { user?: any }, res: Response
       return res.status(400).json({ error: 'Cannot book more than 10 seats in a single transaction.' });
     }
 
+    let calculatedTicketPrice = 0;
+    const calculatedBookingFee = 20;
+
     for (const requestedSeat of seats) {
       const seatInDb = showtime.seats.find((s: any) => s.row === requestedSeat.row && s.col === requestedSeat.col);
 
@@ -26,7 +29,13 @@ export const createBooking = async (req: Request & { user?: any }, res: Response
         const seatName = `${requestedSeat.row}${seatInDb.label || seatInDb.col}`;
         return res.status(409).json({ error: `Payment failed. Seat ${seatName} was already booked by someone else. Please select seats again` });
       }
+
+      // Calculate price securely on backend
+      const seatType = requestedSeat.type === 'PRIME' ? 'PRIME' : 'REGULAR';
+      calculatedTicketPrice += (seatType === 'PRIME' ? showtime.basePrice + 60 : showtime.basePrice);
     }
+
+    const calculatedTotalAmount = calculatedTicketPrice + calculatedBookingFee;
 
     const condition: any = { _id: showtime._id };
     const updateOperations: any = {};
@@ -44,7 +53,6 @@ export const createBooking = async (req: Request & { user?: any }, res: Response
     const result = await Showtime.updateOne(condition, { $set: updateOperations });
 
     if (result.modifiedCount === 0) {
-      // Find out exactly which seat caused the conflict by fetching fresh data
       const latestShowtime = await Showtime.findById(showtimeId);
       let conflictingSeats = [];
       if (latestShowtime) {
@@ -66,9 +74,9 @@ export const createBooking = async (req: Request & { user?: any }, res: Response
       userUid,
       showtime: showtimeId,
       seats,
-      ticketPrice,
-      bookingFee,
-      totalAmount,
+      ticketPrice: calculatedTicketPrice,
+      bookingFee: calculatedBookingFee,
+      totalAmount: calculatedTotalAmount,
       paymentMethod,
       qrCodeData
     });
