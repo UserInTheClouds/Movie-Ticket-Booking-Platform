@@ -45,6 +45,11 @@ app.use('/api/showtimes', showtimeRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/theatres', theatreRoutes);
 
+// Health check endpoint for cron-job.org or similar services
+app.get('/ping', (req, res) => {
+    res.status(200).send('pong');
+});
+
 app.listen(Number(PORT) || 5000, "0.0.0.0", () => {
     console.log("Server is running at port", PORT || 5000);
 });
